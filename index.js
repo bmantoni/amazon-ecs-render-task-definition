@@ -37,6 +37,7 @@ async function run() {
     delete containerDef.executionRoleArn;
     newTaskDef.requiresCompatibilities = containerDef.requiresCompatibilities;
     delete containerDef.requiresCompatibilities;
+    newTaskDef.networkMode = 'awsvpc';
 
     // Write out a new task definition file
     var updatedTaskDefFile = tmp.fileSync({
