@@ -2477,6 +2477,8 @@ async function run() {
       throw new Error('Invalid task definition: Could not find container definition with matching name');
     }
     containerDef.image = imageURI;
+    const newTaskDef = {"family": core.getInput('family', { required: true })};
+    newTaskDef.containerDefinitions = taskDefContents;
 
     // Write out a new task definition file
     var updatedTaskDefFile = tmp.fileSync({
@@ -2486,7 +2488,7 @@ async function run() {
       keep: true,
       discardDescriptor: true
     });
-    const newTaskDefContents = JSON.stringify(taskDefContents, null, 2);
+    const newTaskDefContents = JSON.stringify(newTaskDef, null, 2);
     fs.writeFileSync(updatedTaskDefFile.name, newTaskDefContents);
     core.setOutput('task-definition', updatedTaskDefFile.name);
   }
