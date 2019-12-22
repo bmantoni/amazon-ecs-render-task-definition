@@ -2477,8 +2477,13 @@ async function run() {
       throw new Error('Invalid task definition: Could not find container definition with matching name');
     }
     containerDef.image = imageURI;
+    // transform terraform-compatible version to what AWS expects
     const newTaskDef = {"family": core.getInput('family', { required: true })};
     newTaskDef.containerDefinitions = taskDefContents;
+    newTaskDef.executionRoleArn = containerDef.executionRoleArn
+    delete containerDef.executionRoleArn;
+    newTaskDef.requiresCompatibilities = containerDef.requiresCompatibilities;
+    delete containerDef.requiresCompatibilities;
 
     // Write out a new task definition file
     var updatedTaskDefFile = tmp.fileSync({
